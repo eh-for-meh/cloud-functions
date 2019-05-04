@@ -19,6 +19,9 @@ export const sendDealNotification = (
 ) => {
   const before: Deal = change.before.val();
   const after: Deal = change.after.val();
+  let title: string | undefined = after.title;
+  let imageURL: string | undefined = (after.photos || [undefined])[0];
+  let payload: admin.messaging.MessagingPayload | undefined = undefined;
   if (before.id === after.id) {
     let justSoldOut: boolean = Boolean(!before.soldOutAt && after.soldOutAt);
     let itemHasSoldOut: boolean = Boolean(
@@ -36,56 +39,30 @@ export const sendDealNotification = (
         after.launches.length === after.items.length
     );
     if (justSoldOut || allItemsHaveSoldOut) {
-      utils
-        .getNotificationTokensForPath(database, "notifications")
-        .then((tokens: Array<string>) => {
-          let title: string | undefined = after.title;
-          let imageURL: string | undefined = (after.photos || [undefined])[0];
-          if (title && imageURL) {
-            let secureImageURL = imageURL.replace("http://", "https://");
-            let payload: admin.messaging.MessagingPayload = utils.generateDealSoldOutNotification(
-              title,
-              secureImageURL
-            );
-            utils.sendNotification(messaging, tokens, payload);
-          } else {
-            throw new Error("Error parsing deal title/imageURL!");
-          }
-        });
+      payload = utils.generatePayloadForNotification(
+        utils.generateDealSoldOutNotification,
+        title,
+        imageURL
+      );
     } else if (itemHasSoldOut) {
-      utils
-        .getNotificationTokensForPath(database, "notifications")
-        .then((tokens: Array<string>) => {
-          let title: string | undefined = after.title;
-          let imageURL: string | undefined = (after.photos || [undefined])[0];
-          if (title && imageURL) {
-            let secureImageURL = imageURL.replace("http://", "https://");
-            let payload: admin.messaging.MessagingPayload = utils.generateItemSoldOutNotification(
-              title,
-              secureImageURL
-            );
-            utils.sendNotification(messaging, tokens, payload);
-          } else {
-            throw new Error("Error parsing deal title/imageURL!");
-          }
-        });
+      payload = utils.generatePayloadForNotification(
+        utils.generateDealSoldOutNotification,
+        title,
+        imageURL
+      );
     }
   } else {
+    payload = utils.generatePayloadForNotification(
+      utils.generateNewDealNotificationPayload,
+      title,
+      imageURL
+    );
+  }
+  if (payload) {
     utils
       .getNotificationTokensForPath(database, "notifications")
       .then((tokens: Array<string>) => {
-        let title: string | undefined = after.title;
-        let imageURL: string | undefined = (after.photos || [undefined])[0];
-        if (title && imageURL) {
-          let secureImageURL = imageURL.replace("http://", "https://");
-          let payload: admin.messaging.MessagingPayload = utils.generateNewDealNotificationPayload(
-            title,
-            secureImageURL
-          );
-          utils.sendNotification(messaging, tokens, payload);
-        } else {
-          throw new Error("Error parsing deal title/imageURL!");
-        }
+        utils.sendNotification(messaging, tokens, payload!);
       });
   }
 };

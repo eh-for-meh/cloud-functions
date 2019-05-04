@@ -47,6 +47,21 @@ export const generateItemSoldOutNotification = (
   );
 };
 
+export const generatePayloadForNotification = (
+  generator: (
+    name: string,
+    imageURL: string
+  ) => admin.messaging.MessagingPayload,
+  title?: string,
+  imageURL?: string
+): admin.messaging.MessagingPayload | undefined => {
+  if (title && imageURL) {
+    let secureImageURL = imageURL.replace("http://", "https://");
+    return generator(title, secureImageURL);
+  }
+  return;
+};
+
 export const getNotificationTokensForPath = (
   database: admin.database.Database,
   path: string
