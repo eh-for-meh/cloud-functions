@@ -8,8 +8,8 @@ export const checkMehForDealUpdate = (
   return fetchMehData(database)
     .then((data: APIData) => {
       if (data.deal && data.deal.id) {
-        let id: string = data.deal.id;
-        let date: Date = new Date();
+        const id: string = data.deal.id;
+        const date: Date = new Date();
         return database
           .ref(`previousDeal/${id}`)
           .update(data)

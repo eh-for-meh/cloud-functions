@@ -56,7 +56,7 @@ export const generatePayloadForNotification = (
   imageURL?: string
 ): admin.messaging.MessagingPayload | undefined => {
   if (title && imageURL) {
-    let secureImageURL = imageURL.replace("http://", "https://");
+    const secureImageURL = imageURL.replace("http://", "https://");
     return generator(title, secureImageURL);
   }
   return;
@@ -66,11 +66,12 @@ export const getNotificationTokensForPath = (
   database: admin.database.Database,
   path: string
 ): Promise<Array<string>> => {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     database
       .ref(path)
-      .once("value", (snapshot: admin.database.DataSnapshot) => {
-        let tokens: Array<string> = [];
+      .once("value")
+      .then((snapshot: admin.database.DataSnapshot) => {
+        const tokens: Array<string> = [];
         snapshot.forEach((childSnapshot: admin.database.DataSnapshot) => {
           if (
             childSnapshot.key &&
@@ -81,7 +82,8 @@ export const getNotificationTokensForPath = (
           }
         });
         resolve(tokens);
-      });
+      })
+      .catch(reject);
   });
 };
 

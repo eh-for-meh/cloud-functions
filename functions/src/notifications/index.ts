@@ -19,18 +19,18 @@ export const sendDealNotification = (
 ) => {
   const before: Deal = change.before.val();
   const after: Deal = change.after.val();
-  let title: string | undefined = after.title;
-  let imageURL: string | undefined = (after.photos || [undefined])[0];
+  const title: string | undefined = after.title;
+  const imageURL: string | undefined = (after.photos || [undefined])[0];
   let payload: admin.messaging.MessagingPayload | undefined = undefined;
   if (before.id === after.id) {
-    let justSoldOut: boolean = Boolean(!before.soldOutAt && after.soldOutAt);
-    let itemHasSoldOut: boolean = Boolean(
+    const justSoldOut: boolean = Boolean(!before.soldOutAt && after.soldOutAt);
+    const itemHasSoldOut: boolean = Boolean(
       (!before.launches && after.launches) ||
         (before.launches &&
           after.launches &&
           before.launches.length !== after.launches.length)
     );
-    let allItemsHaveSoldOut: boolean = Boolean(
+    const allItemsHaveSoldOut: boolean = Boolean(
       before.launches &&
         before.items &&
         before.launches.length !== before.items.length &&
@@ -59,10 +59,19 @@ export const sendDealNotification = (
     );
   }
   if (payload) {
-    utils
+    return utils
       .getNotificationTokensForPath(database, "notifications")
       .then((tokens: Array<string>) => {
-        utils.sendNotification(messaging, tokens, payload!);
+        return utils.sendNotification(messaging, tokens, payload!);
+      })
+      .catch((err: Error) => {
+        console.error(
+          "Unable to get notification tokens for path:",
+          "notifications"
+        );
+        throw err;
       });
+  } else {
+    throw new Error("Unable to determine payload type!");
   }
 };

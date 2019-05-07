@@ -10,10 +10,12 @@ export const getMehAPIKey = (
   return new Promise((resolve, reject) => {
     database
       .ref("API_KEY")
-      .once("value", (snapshot: admin.database.DataSnapshot) => {
+      .once("value")
+      .then((snapshot: admin.database.DataSnapshot) => {
         if (snapshot.val()) resolve(snapshot.val());
         else reject(new Error("Unable to obtain API key!"));
-      });
+      })
+      .catch(reject);
   });
 };
 
@@ -26,9 +28,11 @@ export const fetchMehData = (
         axios({
           url: `${mehAPI}?apikey=${API_KEY}`,
           method: "GET"
-        }).then((res: AxiosResponse) => {
-          resolve(res.data as APIData);
-        });
+        })
+          .then((res: AxiosResponse) => {
+            resolve(res.data as APIData);
+          })
+          .catch(reject);
       })
       .catch(reject);
   });
