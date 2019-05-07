@@ -78,6 +78,7 @@ workflows:
   version: 2
   workflow:
     jobs:
+      - lint
       - deploy:
           requires:
             - lint
