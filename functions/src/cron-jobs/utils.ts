@@ -1,6 +1,6 @@
 import * as admin from "firebase-admin";
 import axios, { AxiosResponse } from "axios";
-import { APIData } from "../lib/Meh";
+import { APIData } from "../lib/meh";
 
 export const mehAPI = "https://api.meh.com/1/current.json";
 
