@@ -1,12 +1,13 @@
 {
-  "name": "functions",
+  "name": "cloud-functions",
   "scripts": {
     "lint": "tslint --project tsconfig.json",
     "build": "tsc",
     "serve": "npm run build && firebase serve --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
+    "deploy-production": "firebase deploy --only functions -P production",
+    "deploy-staging": "firebase deploy --only functions -P staging",
     "logs": "firebase functions:log"
   },
   "engines": {
