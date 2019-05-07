@@ -72,7 +72,7 @@ jobs:
 
       - run:
           name: Deploy Functions
-          command: cd ./functions && npm run deploy-staging -- --token=$FIREBASE_TOKEN
+          command: cd ./functions && ./node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN --only functions
 
 workflows:
   version: 2
