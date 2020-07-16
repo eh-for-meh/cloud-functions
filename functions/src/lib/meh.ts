@@ -1,4 +1,4 @@
-export interface Anwser {
+export interface Answer {
   id?: string;
   text?: string;
   voteCount?: number;
@@ -49,7 +49,7 @@ export interface Deal {
 }
 
 export interface Poll {
-  answers?: Array<Anwser>;
+  answers?: Array<Answer>;
   id?: string;
   startDate?: string;
   title?: string;
