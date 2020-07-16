@@ -1,7 +1,7 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 
-type FCMMethod = "POST" | "DELETE";
+export type FCMMethod = "POST" | "DELETE";
 
 export interface CallData {
   method: FCMMethod;

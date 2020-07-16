@@ -1,7 +1,8 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
-import { sendDealNotification, FCMHandler } from "./notifications";
+import { sendDealNotification } from "./notifications";
+import * as FCMHandler from "./notifications/FCMHandler";
 import { checkMehForDealUpdate } from "./cron-jobs";
 
 admin.initializeApp(functions.config().firebase);
