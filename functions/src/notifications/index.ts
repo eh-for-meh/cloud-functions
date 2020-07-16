@@ -1,6 +1,7 @@
 import { Change, EventContext } from "firebase-functions";
 import * as admin from "firebase-admin";
 import * as utils from "./utils";
+export * as FCMHandler from "./FCMHandler";
 
 export interface Deal extends admin.database.DataSnapshot {
   id?: string;

@@ -1,13 +1,19 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
-import { sendDealNotification } from "./notifications";
+import { sendDealNotification, FCMHandler } from "./notifications";
 import { checkMehForDealUpdate } from "./cron-jobs";
 
 admin.initializeApp(functions.config().firebase);
 
+exports.handleFCM = functions.https.onCall(
+  (data: FCMHandler.CallData, _: functions.https.CallableContext) => {
+    return FCMHandler.handler(data, admin.database());
+  }
+);
+
 exports.updateItem = functions.https.onRequest(
-  (_: functions.https.Request, response: functions.Response) => {
+  (_: functions.Request, response: functions.Response) => {
     return checkMehForDealUpdate(admin.database())
       .then(() => response.sendStatus(200))
       .catch((err: Error) => {
