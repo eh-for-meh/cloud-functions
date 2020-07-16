@@ -12,16 +12,12 @@ exports.handleFCM = functions.https.onCall(
   }
 );
 
-exports.updateItem = functions.https.onRequest(
-  (_: functions.Request, response: functions.Response) => {
-    return checkMehForDealUpdate(admin.database())
-      .then(() => response.sendStatus(200))
-      .catch((err: Error) => {
-        console.error("Unexpected error:", err);
-        response.sendStatus(500);
-      });
-  }
-);
+exports.updateDeal = functions.pubsub
+  .schedule("every 5 mins")
+  .timeZone("America/New_York")
+  .onRun((_: functions.EventContext) => {
+    return checkMehForDealUpdate(admin.database());
+  });
 
 exports.sendDealNotification = functions.database
   .ref("currentDeal/deal")
