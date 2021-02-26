@@ -1,6 +1,6 @@
-import { Change, EventContext } from "firebase-functions";
-import * as admin from "firebase-admin";
-import * as utils from "./utils";
+import { Change, EventContext } from 'firebase-functions';
+import * as admin from 'firebase-admin';
+import * as utils from './utils';
 
 export interface Deal extends admin.database.DataSnapshot {
   id?: string;
@@ -60,18 +60,18 @@ export const sendDealNotification = (
   }
   if (payload) {
     return utils
-      .getNotificationTokensForPath(database, "notifications")
+      .getNotificationTokensForPath(database, 'notifications')
       .then((tokens: Array<string>) => {
         return utils.sendNotification(messaging, tokens, payload!);
       })
       .catch((err: Error) => {
         console.error(
-          "Unable to get notification tokens for path:",
-          "notifications"
+          'Unable to get notification tokens for path:',
+          'notifications'
         );
         throw err;
       });
   } else {
-    throw new Error("Unable to determine payload type!");
+    throw new Error('Unable to determine payload type!');
   }
 };

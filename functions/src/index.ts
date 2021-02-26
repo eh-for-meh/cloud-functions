@@ -1,9 +1,9 @@
-import * as functions from "firebase-functions";
-import * as admin from "firebase-admin";
+import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin';
 
-import { sendDealNotification } from "./notifications";
-import * as FCMHandler from "./notifications/FCMHandler";
-import { checkMehForDealUpdate } from "./cron-jobs";
+import { sendDealNotification } from './notifications';
+import * as FCMHandler from './notifications/FCMHandler';
+import { checkMehForDealUpdate } from './cron-jobs';
 
 admin.initializeApp(functions.config().firebase);
 
@@ -14,14 +14,14 @@ exports.handleFCM = functions.https.onCall(
 );
 
 exports.updateDeal = functions.pubsub
-  .schedule("every 5 mins")
-  .timeZone("America/New_York")
+  .schedule('every 5 mins')
+  .timeZone('America/New_York')
   .onRun((_: functions.EventContext) => {
     return checkMehForDealUpdate(admin.database());
   });
 
 exports.sendDealNotification = functions.database
-  .ref("currentDeal/deal")
+  .ref('currentDeal/deal')
   .onUpdate(
     (
       change: functions.Change<admin.database.DataSnapshot>,

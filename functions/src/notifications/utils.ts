@@ -1,4 +1,4 @@
-import * as admin from "firebase-admin";
+import * as admin from 'firebase-admin';
 
 export const generateDealNotification = (
   title: string,
@@ -7,14 +7,14 @@ export const generateDealNotification = (
 ): admin.messaging.MessagingPayload => {
   return {
     data: {
-      ["attachment-url"]: imageURL
+      ['attachment-url']: imageURL,
     },
     notification: {
-      content_available: "true",
+      content_available: 'true',
       title,
       body,
-      mutable_content: "true"
-    }
+      mutable_content: 'true',
+    },
   };
 };
 
@@ -22,7 +22,7 @@ export const generateNewDealNotificationPayload = (
   name: string,
   imageURL: string
 ): admin.messaging.MessagingPayload => {
-  return generateDealNotification("Check out this new deal!", name, imageURL);
+  return generateDealNotification('Check out this new deal!', name, imageURL);
 };
 
 export const generateDealSoldOutNotification = (
@@ -30,7 +30,7 @@ export const generateDealSoldOutNotification = (
   imageURL: string
 ): admin.messaging.MessagingPayload => {
   return generateDealNotification(
-    "The current deal has sold out!",
+    'The current deal has sold out!',
     `There are no more ${name} left`,
     imageURL
   );
@@ -56,7 +56,7 @@ export const generatePayloadForNotification = (
   imageURL?: string
 ): admin.messaging.MessagingPayload | undefined => {
   if (title && imageURL) {
-    const secureImageURL = imageURL.replace("http://", "https://");
+    const secureImageURL = imageURL.replace('http://', 'https://');
     return generator(title, secureImageURL);
   }
   return;
@@ -69,7 +69,7 @@ export const getNotificationTokensForPath = (
   return new Promise((resolve, reject) => {
     database
       .ref(path)
-      .once("value")
+      .once('value')
       .then((snapshot: admin.database.DataSnapshot) => {
         const tokens: Array<string> = [];
         snapshot.forEach((childSnapshot: admin.database.DataSnapshot) => {

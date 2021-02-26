@@ -20,7 +20,7 @@ export interface Theme {
   accentColor?: string;
   backgroundColor?: string;
   backgroundImage?: string;
-  foreground?: "dark" | "light";
+  foreground?: 'dark' | 'light';
 }
 
 export interface Topic {
