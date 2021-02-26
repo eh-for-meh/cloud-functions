@@ -10,7 +10,7 @@ export const generateDealNotification = (
       ["attachment-url"]: imageURL
     },
     notification: {
-      content_avaliable: "true",
+      content_available: "true",
       title,
       body,
       mutable_content: "true"
