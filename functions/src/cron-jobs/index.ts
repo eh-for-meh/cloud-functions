@@ -1,13 +1,17 @@
-import * as admin from "firebase-admin";
-import { fetchMehData } from "./utils";
-import { APIData } from "../lib/meh";
+import * as admin from 'firebase-admin';
+import { fetchMehData, saveDealAsPreviousDeal } from './utils';
+import { APIData } from '../lib/meh';
 
 export const checkMehForDealUpdate = async (
   database: admin.database.Database
 ): Promise<boolean> => {
-  const data: APIData = await fetchMehData(database);
+  const results = await Promise.all([
+    fetchMehData(database),
+    saveDealAsPreviousDeal(database),
+  ]);
+  const data: APIData = results[0];
   if (data.deal && data.deal.id) {
-    await database.ref("currentDeal").set(data);
+    await database.ref('currentDeal').set(data);
     return true;
   }
   return false;
