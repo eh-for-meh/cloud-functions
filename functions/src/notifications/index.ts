@@ -50,6 +50,9 @@ export const sendDealNotification = (
         title,
         imageURL
       );
+    } else {
+      console.log('Deal has not updated or sold out.');
+      return;
     }
   } else {
     payload = utils.generatePayloadForNotification(
