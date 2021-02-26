@@ -11,12 +11,12 @@ export interface Deal extends admin.database.DataSnapshot {
   title?: string;
 }
 
-export const sendDealNotification = (
+export const sendDealNotification = async (
   database: admin.database.Database,
   messaging: admin.messaging.Messaging,
   change: Change<admin.database.DataSnapshot>,
   context: EventContext
-) => {
+): Promise<boolean> => {
   const before: Deal = change.before.val();
   const after: Deal = change.after.val();
   const title: string | undefined = after.title;
@@ -52,7 +52,7 @@ export const sendDealNotification = (
       );
     } else {
       console.log('Deal has not updated or sold out.');
-      return;
+      return true;
     }
   } else {
     payload = utils.generatePayloadForNotification(
@@ -62,18 +62,11 @@ export const sendDealNotification = (
     );
   }
   if (payload) {
-    return utils
-      .getNotificationTokensForPath(database, 'notifications')
-      .then((tokens: Array<string>) => {
-        return utils.sendNotification(messaging, tokens, payload!);
-      })
-      .catch((err: Error) => {
-        console.error(
-          'Unable to get notification tokens for path:',
-          'notifications'
-        );
-        throw err;
-      });
+    const tokens = await utils.getNotificationTokensForPath(
+      database,
+      'notifications'
+    );
+    return await utils.sendNotification(messaging, tokens, payload);
   } else {
     throw new Error('Unable to determine payload type!');
   }
