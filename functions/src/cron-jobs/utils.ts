@@ -33,7 +33,7 @@ export const saveDealAsPreviousDeal = async (
   const snapshot = await database.ref('currentDeal').once('value');
   const deal = snapshot.val() as APIData;
   if (deal.deal && deal.deal.id) {
-    await database.ref(`previousDeals/${deal.deal.id}`).update(deal);
+    await database.ref(`previousDeal/${deal.deal.id}`).update(deal);
     const previousDealTimeSnapshot = await database
       .ref(`previousDeal/${deal.deal.id}/time`)
       .once('value');
